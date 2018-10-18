@@ -24,11 +24,16 @@ def validate_credentials(usernam, password)
     username = username
 
 
-def decrypt_key(block_key)
-	#decrypt key stored in blockchain
-    
+def decrypt_keyblock_key():
+    # pull down secret key from blockchain
 
-def gen_login_code(decrypted_key)
+	# decrypt key stored in blockchain
+
+    return decrypted_key
+
+def gen_login_code():
+    # calls the decrypt key function
+    decrypted_key = decrypt_keyblock_key()
     # encode the key that was pulled from the block chain to bytes
 	byte_key = str.encode(decrypted_key)
     # get the current system time
@@ -52,8 +57,11 @@ def gen_login_code(decrypted_key)
     auth_code = auth_hash % 10 ** 8
     return auth_code
 
+
 def check_two_factor(auth_code, input_code):
+    auth_code = gen_login_code()
+    
     # if the authentication code is equal to the input code return true
-    if decrypted_key == input_code:
+    if auth_code == input_code:
         return True
     return False

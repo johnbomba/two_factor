@@ -12,11 +12,14 @@ app = Flask(__name__)
 def login():
     if request.method == 'GET':
         return render_template('login.html')
-else:
-    submitted_username = request.form['username']
-    submitted_password = request.form['password']
-    validate(submitted_username,submitted_password)
-
+    else:
+        submitted_username = request.form['username']
+        submitted_password = request.form['password']
+        result = m.validate_credentials(submitted_username,submitted_password)
+        if result:
+            # go to index 
+        else:
+            # bad Credentials 
 
 @app.route(/authorize, methods=['GET', 'POST'])
 

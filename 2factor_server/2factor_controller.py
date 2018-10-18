@@ -9,20 +9,22 @@ app = Flask(__name__)
 
 # need refresh button on the html page and a display pane
 
-@app.route(/, methods=['POST'])
-def display_key(hashed_key):
+@app.route(/, methods=['GET'])
+def display_key():
     # needs to display the 6 digit code 
-    if check_hash(hashed_key) == True:
-	result = generate_key(hashed_key)
-
-
-def decrypt_key(block_key)
-	#decrypt key stored in blockchain
     
+    result = gen_login_code()
 
-    get_login_code(decrypted_key)
+def decrypt_keyblock_key():
+    # pull down secret key from blockchain
 
-def gen_login_code(decrypted_key)
+	# decrypt key stored in blockchain
+
+    return decrypted_key
+
+def gen_login_code():
+    # calls the decrypt key function
+    decrypted_key = decrypt_keyblock_key()
     # encode the key that was pulled from the block chain to bytes
 	byte_key = str.encode(decrypted_key)
     # get the current system time
