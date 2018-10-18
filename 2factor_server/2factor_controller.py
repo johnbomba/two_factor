@@ -3,6 +3,7 @@
 import time
 import os
 import hashlib
+import Crypto
 from flask import Flask, renfer_template, request, redirect, session
 
 app = Flask(__name__)
@@ -17,8 +18,9 @@ def display_key():
 
 def decrypt_keyblock_key():
     # pull down secret key from blockchain
-
+    block_key = 
 	# decrypt key stored in blockchain
+    rsakey = RSA.importKey(private_key)
 
     return decrypted_key
 
