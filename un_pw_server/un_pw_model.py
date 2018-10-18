@@ -1,26 +1,32 @@
 #! /usr/bin/env python3
 
-import time
 import os
+import time
 import hashlib
-from flask import Flask, renfer_template, request, redirect, session
+import sqlite3
 
-app = Flask(__name__)
-
-# need refresh button on the html page and a display pane
-
-@app.route(/, methods=['POST'])
-def display_key(hashed_key):
-    # needs to display the 6 digit code 
-    if check_hash(hashed_key) == True:
-	result = generate_key(hashed_key)
+def validate_credentials(usernam, password)
+    # connect to the credentails DB
+    connection = sqlite3.connect('credentials.db',check_same_thread=False)
+    cursor = connection.cursor()
+    query = cursor.execute(f'SELECT username from users WHERE username = "{username}";')
+    un_result = cursor.fetchone()
+    # if the input username is equal to the username in the db return true
+    if username == un_result:
+        query2 = cursor.execute(f'SELECT password from users WHERE username = "{username}";')
+        # if the PW is equal to the PW in the db return true 
+        # TODO HASH The PW 
+        if password == query2:
+            return True
+        return 'Invalid Login Credentials'
+    return "Invalid Login Credentials"
+    cursor.close()
+    username = username
 
 
 def decrypt_key(block_key)
 	#decrypt key stored in blockchain
     
-
-    get_login_code(decrypted_key)
 
 def gen_login_code(decrypted_key)
     # encode the key that was pulled from the block chain to bytes
@@ -46,3 +52,8 @@ def gen_login_code(decrypted_key)
     auth_code = auth_hash % 10 ** 8
     return auth_code
 
+def check_two_factor(auth_code, input_code):
+    # if the authentication code is equal to the input code return true
+    if decrypted_key == input_code:
+        return True
+    return False

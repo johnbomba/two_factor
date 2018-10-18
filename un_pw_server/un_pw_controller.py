@@ -1,6 +1,9 @@
+#! /usr/bin/env python3
 import time
 import os
 from flask import Flask, renfer_template, request, redirect, session
+
+import un_pw_model as m
 
 app = Flask(__name__)
 
@@ -14,7 +17,10 @@ else:
     submitted_password = request.form['password']
     validate(submitted_username,submitted_password)
 
-def validate(submitted_username, submitted_password):
-    # need to send credentials to the log in server
 
+@app.route(/authorize, methods=['GET', 'POST'])
+
+
+def validate_credentials(submitted_username, submitted_password):
+    # if UN & PW are 
 @app.route(/index, methods=['GET'])
