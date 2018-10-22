@@ -58,7 +58,7 @@ def gen_login_code():
     return auth_code
 
 
-def check_two_factor(auth_code, input_code):
+def check_two_factor(input_code):
     auth_code = gen_login_code()
     
     # if the authentication code is equal to the input code return true

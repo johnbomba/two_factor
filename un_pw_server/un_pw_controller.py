@@ -13,17 +13,28 @@ def login():
     if request.method == 'GET':
         return render_template('login.html')
     else:
+        # submit username and pw from login page
         submitted_username = request.form['username']
         submitted_password = request.form['password']
         result = m.validate_credentials(submitted_username,submitted_password)
         if result:
-            # go to index 
+            # load to /authorize.html
         else:
-            # bad Credentials 
+            # return bad Credentials 
 
 @app.route(/authorize, methods=['GET', 'POST'])
+def authorize():
+    if request.method == 'GET':
+        return render_template('authorzie.html')
+    else:
+        #submit authentication key from authenticator app
+        submitted_key = request.form['Authenticator Key']
+        result = m.check_two_factor(submitted_key)
+        if result:
+            # load index.html
+        else:
+            # return bad credentials 
 
 
-def validate_credentials(submitted_username, submitted_password):
-    # if UN & PW are 
+
 @app.route(/index, methods=['GET'])
