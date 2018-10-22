@@ -1,14 +1,12 @@
 #! /usr/bin/env python3
-import time
-import os
-from flask import Flask, renfer_template, request, redirect, session
+from flask import Flask, request, redirect, session, render_template
 
 import un_pw_model as m
 
 app = Flask(__name__)
 
 
-@app.route(/login, methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         return render_template('login.html')
@@ -22,8 +20,9 @@ def login():
             return redirect('/authorize')
         else:
             # return bad Credentials 
+            return redirect('/login')
 
-@app.route(/authorize, methods=['GET', 'POST'])
+@app.route('/authorize', methods=['GET', 'POST'])
 def authorize():
     if request.method == 'GET':
         return render_template('authorzie.html')
@@ -33,19 +32,21 @@ def authorize():
         result = m.check_two_factor(submitted_key)
         if result:
             # load index.html
-            return redirect('index.html)
+            return redirect('index.html')
         else:
             # return bad credentials 
             return redirect('/login')
 
-@app.route(/create, methods=['GET', 'POST'])
+@app.route('/create', methods=['GET', 'POST'])
 def create_account():
     if request.method == 'GET':
         return render_template('create.html')
     else:
         submitted_username = request.form['Username']
         submitted_password = request.form['password']
-        m.create_acount(submitted_username,submitted_password)
+        m.create_acount(submitted_username, submitted_password)
         render_template('login.html')
 
-# @app.route(/index, methods=['GET'])
+@app.route('/index', methods=['GET'])
+def dispaly_index():
+    return render_template('index.html')

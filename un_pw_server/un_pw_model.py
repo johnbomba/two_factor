@@ -3,7 +3,6 @@
 import os
 import time
 import hashlib
-import binascii
 import sqlite3
 import mcrpc
 
