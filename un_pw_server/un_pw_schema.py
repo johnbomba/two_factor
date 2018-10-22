@@ -11,7 +11,8 @@ cursor = connection.cursor()
 cursor.execute(
     """CREATE TABLE users(
         pk INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT,
-        password VARCHAR
+        username VARCHAR,
+        password VARCHAR,
+        salt VARCHAR
     );"""
 )

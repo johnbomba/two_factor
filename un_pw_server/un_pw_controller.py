@@ -19,6 +19,7 @@ def login():
         result = m.validate_credentials(submitted_username,submitted_password)
         if result:
             # load to /authorize.html
+            return redirect('/authorize')
         else:
             # return bad Credentials 
 
@@ -28,13 +29,23 @@ def authorize():
         return render_template('authorzie.html')
     else:
         #submit authentication key from authenticator app
-        submitted_key = request.form['Authenticator Key']
+        submitted_key = request.form['Authenticator_Key']
         result = m.check_two_factor(submitted_key)
         if result:
             # load index.html
+            return redirect('index.html)
         else:
             # return bad credentials 
+            return redirect('/login')
 
+@app.route(/create, methods=['GET', 'POST'])
+def create_account():
+    if request.method == 'GET':
+        return render_template('create.html')
+    else:
+        submitted_username = request.form['Username']
+        submitted_password = request.form['password']
+        m.create_acount(submitted_username,submitted_password)
+        render_template('login.html')
 
-
-@app.route(/index, methods=['GET'])
+# @app.route(/index, methods=['GET'])
