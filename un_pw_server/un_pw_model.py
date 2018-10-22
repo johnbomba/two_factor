@@ -4,7 +4,6 @@ import os
 import time
 import hashlib
 import sqlite3
-import mcrpc
 
 def validate_credentials(username, password):
     # connect to the credentails DB
@@ -40,7 +39,6 @@ def validate_credentials(username, password):
     username = username
     return "Invalid Login Credentials"
 
-
 def decrypt_keyblock_key():
     # pull down secret key from blockchain
 
@@ -74,15 +72,6 @@ def gen_login_code():
     auth_code = auth_hash % 10 ** 8
     return auth_code
 
-
-def check_two_factor(submitted_key):
-    # if the authentication code is equal to the input code return true
-    if submitted_key = gen_login_code():
-        return True
-    else:
-        return False
-
-
 def create_acount(new_username, new_password):
     # username and password inputs
     username = new_username
@@ -107,6 +96,15 @@ def create_acount(new_username, new_password):
     connection.commit()
     cursor.close()
     connection.close()
+
+def check_two_factor(submitted_key):
+    # if the authentication code is equal to the input code return true
+    if submitted_key = gen_login_code():
+        return True
+    else:
+        return False
+
+
 
 if __name__ == '__main__':
     # create_acount('cal', 'cal')
