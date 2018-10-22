@@ -13,20 +13,21 @@ app = Flask(__name__)
 @app.route(/, methods=['GET'])
 def display_key():
     # needs to display the 8 digit code 
-    
     result = gen_login_code()
 
-def decrypt_keyblock_key():
+def decrypt_block_key():
     # pull down secret key from blockchain
-    block_key = 
+
+    # TODO get the block key 
+    block_key = os.system("")
+
 	# decrypt key stored in blockchain
     rsakey = RSA.importKey(private_key)
-
     return decrypted_key
 
 def gen_login_code():
     # calls the decrypt key function
-    decrypted_key = decrypt_keyblock_key()
+    decrypted_key = decrypt_block_key()
     # encode the key that was pulled from the block chain to bytes
 	byte_key = str.encode(decrypted_key)
     # get the current system time
