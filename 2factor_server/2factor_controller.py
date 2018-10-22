@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route(/, methods=['GET'])
 def display_key():
-    # needs to display the 6 digit code 
+    # needs to display the 8 digit code 
     
     result = gen_login_code()
 
