@@ -5,14 +5,12 @@ from flask import Flask
 
 app = Flask(__name__)
 
-@app.route(/)
+@app.route('/', methods=['POST'])
 def new_key_to_block():
+    if 
     block_key = os.urandom(16)
-    # need to link the public keys to this app
-    login_server_pub_key = # Key/location
-    two_factor_pub_key = # Key/location
-    # need to link the private key for the block writer
-    block_writer_pri_key = # Key/location
-    # encrypt the secret key with
+    # pull down 2fa pub key
+    # pull down login pub key 
 
-    # os.system block command
+    # encrypt and publish block key for 2fa
+    # encrypt and publish block key for login

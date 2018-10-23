@@ -38,12 +38,10 @@ def authorize():
             return redirect('/login')
 
 @app.route('/create', methods=['GET', 'POST'])
-def create_account():
-    if request.method == 'GET':
-        return render_template('create.html')
-    else:
+def create_account()# submit username and pw from account creation page 
         submitted_username = request.form['Username']
         submitted_password = request.form['password']
+        # call model create account function
         m.create_acount(submitted_username, submitted_password)
         render_template('login.html')
 

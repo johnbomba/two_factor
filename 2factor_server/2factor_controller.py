@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
 
+# run this on the 2 factor server
+
 import time
 import os
 import hashlib

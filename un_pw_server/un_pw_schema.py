@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 # DB setup on verification server 
 
 import sqlite3
