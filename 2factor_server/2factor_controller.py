@@ -5,7 +5,6 @@
 import time
 import os
 import hashlib
-import Crypto
 from flask import Flask, renfer_template, request, redirect, session
 
 app = Flask(__name__)

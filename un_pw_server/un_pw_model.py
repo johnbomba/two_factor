@@ -98,6 +98,10 @@ def create_acount(new_username, new_password):
     connection.commit()
     cursor.close()
     connection.close()
+    gen_two_factor()
+
+def gen_two_factor():
+    
 
 def check_two_factor(submitted_key):
     # if the authentication code is equal to the input code return true
