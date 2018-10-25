@@ -6,7 +6,6 @@ import time
 import os
 import hashlib
 import mcrpc
-import rsa
 from flask import Flask, renfer_template, request, redirect, session
 
 app = Flask(__name__)
@@ -28,11 +27,10 @@ client = c = mcrpc.RpcClient('127.0.0.1', 4332, 'multichainrpc', 'FgUY2NdS7ydYwp
 block_key = client.liststreamkeyitems('items', tfa_lable, count=True, start=1)
 block_key = block_key[0]['data']
 # decrypt key stored in blockchain
-with open() as f:
-    key = f.read()
+os.system('export SECRET=$(xxd -p -r | openssl rsautl -decrypt -inkey ~/.multichain/2fact/stream-privkeys/1Kgb6cwndPfZWHp62sxqxW15661nafgC1uFHU.pem'))
+decrypted_key = os.environ.get('SECRET')
+os.system('export SECRET='')
 
-rsakey = rsa.importKey(private_key)
-decrypted_key = rsa.decrypt(block_key, rsakey)
 return decrypted_key
 
 def gen_login_code():
