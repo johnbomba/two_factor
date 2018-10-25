@@ -2,6 +2,8 @@
 import os
 from flask import Flask
 
+import rsa
+
 app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
@@ -14,8 +16,8 @@ def new_key_to_block():
 
     # use addresses to build lables
     block_address = '1KNibad2yyoZimaXkDgEzdCgJiRoynqE6bVUTt'
-    login_address = '1GsqQEwfMfYu773ywxBF7xj4ZBvW8VcQJEEA8i'
-    tfa_address = '1Kgb6cwndPfZWHp62sxqxW15661nafgC1uFHU'
+    tfa_address = '1GsqQEwfMfYu773ywxBF7xj4ZBvW8VcQJEEA8i'
+    login_address = '1Kgb6cwndPfZWHp62sxqxW15661nafgC1uFHU'
 
     login_lable = f'{block_address}-{login_address}'
     print(f'login_lable {login_lable}')
@@ -49,6 +51,7 @@ def block_key():
 def publish_login_secret(block_address, login_lable):
     with open('log_msg','rb') as f:
         x = f.read()
+        x = x.hex()
         print(x)
         print(type(x))
     # encrypt and publish block key for login
@@ -57,6 +60,7 @@ def publish_login_secret(block_address, login_lable):
 def publish_tfa_secret(block_address,tfa_lable):
     with open('tfa_msg','rb') as g:
         y = g.read()
+        y = y.hex()
         print(y)
         print(type(y))
     # encrypt and publish block key for tfa

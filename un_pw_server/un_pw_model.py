@@ -3,6 +3,8 @@
 import os
 import time
 import hashlib
+import rsa
+import mcrpc
 import sqlite3
 
 def validate_credentials(username, password):
@@ -41,11 +43,15 @@ def validate_credentials(username, password):
 
 def decrypt_block_key():
     # pull down secret key from blockchain
-
-    # TODO
-    block_key = os.system('')
-	# decrypt key stored in blockchain
-
+block_address = '1KNibad2yyoZimaXkDgEzdCgJiRoynqE6bVUTt'
+login_address = '1GsqQEwfMfYu773ywxBF7xj4ZBvW8VcQJEEA8i'
+login_lable = f'{block_address}-{tfa_address}'
+# TODO get the block key 
+client = c = mcrpc.RpcClient('127.0.0.1', 4332, 'multichainrpc', '')
+block_key = client.liststreamkeyitems('items', login_lable)
+# decrypt key stored in blockchain
+rsakey = rsa.importKey(private_key)
+decrypted_key = rsa.decrypt(block_key, rsakey)
     return decrypted_key
 
 def gen_login_code():
