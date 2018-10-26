@@ -11,14 +11,17 @@ app.secret_key = 'correct-horse-battery-staple'
 def login():
     if request.method == 'GET':
         return render_template('login.html')
+
     else:
         # submit username and pw from login page
         submitted_username = request.form['username']
         submitted_password = request.form['password']
         result = m.validate_credentials(submitted_username,submitted_password)
+
         if result:
             # load to /authorize.html
             return redirect('/authorize')
+
         else:
             # return bad Credentials
             flash("Bad Credentials. Please try again", 'danger')
@@ -28,6 +31,7 @@ def login():
 def authorize():
     if request.method == 'GET':
         return render_template('authorzie.html')
+    
     else:
         #submit authentication key from authenticator app
         submitted_key = request.form['Authenticator_Key']
@@ -35,6 +39,7 @@ def authorize():
         if result:
             # load index.html
             return redirect('index.html')
+        
         else:
             # return bad credentials 
             flash("Bad Credentials. Please try again", 'danger')
@@ -45,6 +50,7 @@ def create_account():
         # submit username and pw from account creation page 
         submitted_username = request.form['Username']
         submitted_password = request.form['password']
+
         # call model create account function
         m.create_acount(submitted_username, submitted_password)
         render_template('login.html')
