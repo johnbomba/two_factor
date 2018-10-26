@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+# this goes on the login server
 
 from flask import Flask, request, redirect, session, flash, render_template
 

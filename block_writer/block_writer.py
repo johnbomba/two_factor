@@ -1,4 +1,5 @@
 #!/usr/bin/env python3 
+# this goes on the block writer server
 import os
 from flask import Flask
 
