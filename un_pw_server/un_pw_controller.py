@@ -9,8 +9,8 @@ app = Flask(__name__)
 app.secret_key = 'correct-horse-battery-staple'
 
 @app.route('/')
-def redirect():
-    return redirect()
+def redirect_to_login():
+    return redirect('/login')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
