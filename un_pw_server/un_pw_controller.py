@@ -7,6 +7,10 @@ import un_pw_model as m
 app = Flask(__name__)
 app.secret_key = 'correct-horse-battery-staple'
 
+@app.route('/')
+def redirect():
+    return redirect()
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
