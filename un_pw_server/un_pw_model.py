@@ -3,6 +3,7 @@
 import os
 import time
 import hashlib
+import mcrpc
 import sqlite3
 
 def validate_credentials(username, password):
@@ -43,11 +44,11 @@ def decrypt_block_key():
     # pull down secret key from blockchain
     block_address = '1KNibad2yyoZimaXkDgEzdCgJiRoynqE6bVUTt'
     login_address = '1GsqQEwfMfYu773ywxBF7xj4ZBvW8VcQJEEA8i'
-    login_lable = f'{block_address}-{tfa_address}'
+    login_lable = f'{block_address}-{login_address}'
 
     # pull down secret key from blockchain
     client = c = mcrpc.RpcClient('127.0.0.1', 4332, 'multichainrpc', '')
-    block_key = client.liststreamkeyitems('items', tfa_lable, count=True, start=1)
+    block_key = client.liststreamkeyitems('items', login_lable, count=True, start=1)
     block_key = block_key[0]['data']
 
     # decrypt key stored in blockchain
