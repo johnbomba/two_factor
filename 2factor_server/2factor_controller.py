@@ -20,19 +20,23 @@ def display_key():
 
 def decrypt_block_key():
     # pull down secret key from blockchain
-block_address = '1KNibad2yyoZimaXkDgEzdCgJiRoynqE6bVUTt'
-tfa_address =  '1Kgb6cwndPfZWHp62sxqxW15661nafgC1uFHU' 
-tfa_lable = f'{block_address}-{tfa_address}'
-# TODO get the block key 
-client = c = mcrpc.RpcClient('127.0.0.1', 4332, 'multichainrpc', 'FgUY2NdS7ydYwpGQifCBzkUmqmpynKcQuwbNuf7PfhmR')
-block_key = client.liststreamkeyitems('items', tfa_lable, count=True, start=1)
-block_key = block_key[0]['data']
-# decrypt key stored in blockchain
-os.system('export SECRET=$(xxd -p -r | openssl rsautl -decrypt -inkey ~/.multichain/2fact/stream-privkeys/1Kgb6cwndPfZWHp62sxqxW15661nafgC1uFHU.pem'))
-decrypted_key = os.environ.get('SECRET')
-os.system('export SECRET='')
+    block_address = '1KNibad2yyoZimaXkDgEzdCgJiRoynqE6bVUTt'
+    tfa_address =  '1Kgb6cwndPfZWHp62sxqxW15661nafgC1uFHU' 
+    tfa_lable = f'{block_address}-{tfa_address}'
+    
+    # get the block key 
+    client = c = mcrpc.RpcClient('127.0.0.1', 4332, 'multichainrpc', 'FgUY2NdS7ydYwpGQifCBzkUmqmpynKcQuwbNuf7PfhmR')
+    block_key = client.liststreamkeyitems('items', tfa_lable, count=True, start=1)
+    block_key = block_key[0]['data']
+    
+    # export the block_key to bash
+    os.environ['SECRET']=block_key
+    
+    # decrypt key stored in blockchain
+    os.system('DECRYPT=$(echo $SECRET | xxd -p -r | openssl rsautl -decrypt -inkey ~/.multichain/2fact/stream-privkeys/1Kgb6cwndPfZWHp62sxqxW15661nafgC1uFHU.pem)')
+    decrypted_key = os.environ.get('DECRYPT')
 
-return decrypted_key
+    return decrypted_key
 
 def gen_login_code():
     # calls the decrypt key function

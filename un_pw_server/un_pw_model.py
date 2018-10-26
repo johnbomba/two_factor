@@ -47,14 +47,17 @@ def decrypt_block_key():
     login_lable = f'{block_address}-{login_address}'
 
     # pull down secret key from blockchain
-    client = c = mcrpc.RpcClient('127.0.0.1', 4332, 'multichainrpc', '')
+    client = c = mcrpc.RpcClient('127.0.0.1', 4332, 'multichainrpc', '9kV9AaxNYqtqFZB49dHRr7tPvwo3kxiTSTkwMpNXcJDW')
     block_key = client.liststreamkeyitems('items', login_lable, count=True, start=1)
     block_key = block_key[0]['data']
 
+    # export the block_key to bash
+    os.environ['SECRET']=block_key
+    
     # decrypt key stored in blockchain
-    os.system(f'xxd -p -r | openssl rsautil -decrypt -inkey ~/.multichain/2fact/stream-privkeys/{login_address}.pem')
-    decrypted_key = os.environ()
-    os.system('')
+    os.system('DECRYPT=$(echo $SECRET | xxd -p -r | openssl rsautl -decrypt -inkey ~/.multichain/2fact/stream-privkeys/1Kgb6cwndPfZWHp62sxqxW15661nafgC1uFHU.pem)')
+    decrypted_key = os.environ.get('DECRYPT')
+
     return decrypted_key
 
 def gen_login_code():
