@@ -34,10 +34,10 @@ def validate_credentials(username, password):
             return True
         cursor.close()
         username = username
-        return 'Invalid Login Credentials'
+        return None
     cursor.close()
     username = username
-    return "Invalid Login Credentials"
+    return None
 
 def decrypt_block_key():
     # pull down secret key from blockchain
@@ -109,11 +109,11 @@ def create_acount(new_username, new_password):
     gen_two_factor()
 
 def gen_two_factor():
-    
+    pass
 
 def check_two_factor(submitted_key):
     # if the authentication code is equal to the input code return true
-    if submitted_key = gen_login_code():
+    if submitted_key == gen_login_code():
         return True
     else:
         return False
@@ -121,5 +121,5 @@ def check_two_factor(submitted_key):
 
 
 if __name__ == '__main__':
-    # create_acount('cal', 'cal')
-    validate_credentials('greg','Gu&essThi@sMo%fo')
+    create_acount('carter', 'cart')
+    # validate_credentials('greg','Gu&essThi@sMo%fo')

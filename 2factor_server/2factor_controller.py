@@ -6,16 +6,17 @@ import time
 import os
 import hashlib
 import mcrpc
-from flask import Flask, renfer_template, request, redirect, session
+from flask import Flask, renfer_template, request, redirect, f
 
 app = Flask(__name__)
 
 # need refresh button on the html page and a display pane
 
-@app.route(/, methods=['GET'])
+@app.route(/, methods=['POST'])
 def display_key():
     # needs to display the 8 digit code 
     result = gen_login_code()
+
 
 def decrypt_block_key():
     # pull down secret key from blockchain
@@ -59,3 +60,6 @@ def gen_login_code():
     auth_code = auth_hash % 10 ** 8
     return auth_code
 
+if __name__ == "__main__":
+    app.run('127.0.0.1', debug=True)
+    # app.run("0.0.0.0", debug=True)

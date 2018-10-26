@@ -1,11 +1,11 @@
 #! /usr/bin/env python3
 
-from flask import Flask, request, redirect, session, render_template
+from flask import Flask, request, redirect, session, flash, render_template
 
 import un_pw_model as m
 
 app = Flask(__name__)
-
+app.secret_key = 'correct-horse-battery-staple'
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -20,7 +20,8 @@ def login():
             # load to /authorize.html
             return redirect('/authorize')
         else:
-            # return bad Credentials 
+            # return bad Credentials
+            flash("Bad Credentials. Please try again", 'danger')
             return redirect('/login')
 
 @app.route('/authorize', methods=['GET', 'POST'])
@@ -36,10 +37,12 @@ def authorize():
             return redirect('index.html')
         else:
             # return bad credentials 
+            flash("Bad Credentials. Please try again", 'danger')
             return redirect('/login')
 
 @app.route('/create', methods=['GET', 'POST'])
-def create_account()# submit username and pw from account creation page 
+def create_account():
+        # submit username and pw from account creation page 
         submitted_username = request.form['Username']
         submitted_password = request.form['password']
         # call model create account function
@@ -49,3 +52,8 @@ def create_account()# submit username and pw from account creation page
 @app.route('/index', methods=['GET'])
 def dispaly_index():
     return render_template('index.html')
+
+
+
+if __name__ =="__main__":
+    app.run('127.0.0.1', debug=True)
