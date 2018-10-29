@@ -47,12 +47,13 @@ def validate_credentials(username, password):
 
 def decrypt_block_key():
     # pull down secret key from blockchain
-    block_address = '15vNHaziST8Qt8JbaSRwvKacBgoXwRjcWVYQfK'
-    login_address = '17FpM44bdxjYAKwr9oubZa6phGeLTzXZTrxd5r'
-    login_lable = f'{block_address}-{login_address}'
+    tx_id = # reaplace with tx_id
+    login_address = # replace with login server address''
+    login_lable = f'{tx_id}-{login_address}'
 
-    # pull down secret key from blockchain
-    client = c = mcrpc.RpcClient('127.0.0.1', 4790, 'multichainrpc', 'HxYzWMi4deNTX2SzSShDjJ8GvCWB9c9b2WxiLS2FhaHf')
+    # pull down secret key from blockchain 
+    # TODO change port #
+    client = c = mcrpc.RpcClient(f'127.0.0.1', 4790, 'multichainrpc', {tx_id})
     block_key = client.liststreamkeyitems('items', login_lable, count=True, start=1)
     block_key = block_key[0]['data']
 
@@ -60,7 +61,7 @@ def decrypt_block_key():
     os.environ['SECRET']=block_key
 
     # decrypt key stored in blockchain
-    os.system('DECRYPT=$(echo $SECRET | xxd -p -r | openssl rsautl -decrypt -inkey ~/.multichain/2fact/stream-privkeys/17FpM44bdxjYAKwr9oubZa6phGeLTzXZTrxd5r.pem)')
+    os.system(f'DECRYPT=$(echo $SECRET | xxd -p -r | openssl rsautl -decrypt -inkey ~/.multichain/2fact/stream-privkeys/{login_address}.pem)')
     decrypted_key = os.environ.get('DECRYPT')
 
     return decrypted_key

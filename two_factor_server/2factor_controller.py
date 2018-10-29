@@ -19,12 +19,13 @@ def display_key():
 
 def decrypt_block_key():
     # pull down secret key from blockchain
-    block_address = '15vNHaziST8Qt8JbaSRwvKacBgoXwRjcWVYQfK'
-    tfa_address = '1PbnmjFeTLHX8gr4HbtynmwX4Ly1Z62dXtpciA'
-    tfa_lable = f'{block_address}-{tfa_address}'
+    tx_id = # '<REPLACE WITH TX_ID>'
+    tfa_address = # <REPLACE WITH TFA_ADDRESS''
+    tfa_lable = f'{tx_id}-{tfa_address}'
 
     # pull down secret key from blockchain
-    client = c = mcrpc.RpcClient('127.0.0.1', 4332, 'multichainrpc', 'FgUY2NdS7ydYwpGQifCBzkUmqmpynKcQuwbNuf7PfhmR')
+    # TODO Change port #
+    client = c = mcrpc.RpcClient(f'127.0.0.1', 4332, 'multichainrpc', {tx_id})
     block_key = client.liststreamkeyitems('items', tfa_lable, count=True, start=1)
     block_key = block_key[0]['data']
 
@@ -32,7 +33,7 @@ def decrypt_block_key():
     os.environ['SECRET']=block_key
 
     # decrypt key stored in blockchain
-    os.system('DECRYPT=$(echo $SECRET | xxd -p -r 9999 | openssl rsautl -decrypt -inkey ~/.multichain/2fact/stream-privkeys/1Kgb6cwndPfZWHp62sxqxW15661nafgC1uFHU.pem)')
+    os.system(f'DECRYPT=$(echo $SECRET | xxd -p -r 9999 | openssl rsautl -decrypt -inkey ~/.multichain/2fact/stream-privkeys/{tfa_address}.pem)')
     decrypted_key = os.environ.get('DECRYPT')
 
     return decrypted_key
