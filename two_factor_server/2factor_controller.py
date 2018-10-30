@@ -17,7 +17,7 @@ def display_key():
     # needs to display the 8 digit code 
     result = gen_login_code()
 
-def decrypt_block_key():
+def decrypt_secret_key():
     # pull down secret key from blockchain
     tx_id = # '<REPLACE WITH TX_ID>'
     tfa_address = # <REPLACE WITH TFA_ADDRESS''
@@ -25,7 +25,7 @@ def decrypt_block_key():
 
     # pull down secret key from blockchain
     # TODO Change port #
-    client = c = mcrpc.RpcClient(f'127.0.0.1', 4332, 'multichainrpc', {tx_id})
+    client = c = mcrpc.RpcClient(f'127.0.0.1', 6270, 'multichainrpc', {tx_id})
     block_key = client.liststreamkeyitems('items', tfa_lable, count=True, start=1)
     block_key = block_key[0]['data']
 

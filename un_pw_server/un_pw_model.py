@@ -53,7 +53,7 @@ def decrypt_block_key():
 
     # pull down secret key from blockchain 
     # TODO change port #
-    client = c = mcrpc.RpcClient(f'127.0.0.1', 4790, 'multichainrpc', {tx_id})
+    client = c = mcrpc.RpcClient(f'127.0.0.1', 6270, 'multichainrpc', {tx_id})
     block_key = client.liststreamkeyitems('items', login_lable, count=True, start=1)
     block_key = block_key[0]['data']
 
