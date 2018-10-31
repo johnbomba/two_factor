@@ -1,6 +1,9 @@
 #!/usr/bin/env python3 
 # this goes on the block writer server
 import os
+import sys
+import subprocess
+
 from flask import Flask
 
 app = Flask(__name__)
@@ -44,9 +47,11 @@ def new_key_to_block():
 
 def generate_password():
     # use os.system to generate a pw that will encrypt the secret msg on the block chain 
-    os.system(f'PASSWORD=$(openssl rand -base64 48)')
-    password = os.environ.get('PASSWORD')
-    print(f'password {password}')
+os.environ['PASSWORD'] = 'openssl rand -base64 48'
+password = subprocess.run('$PASSWORD', shell=True, stdout=subprocess.PIPE)
+password = password.stdout
+password = password.decode('utf-8')
+print(f'password {password}')
     print(type(password))
     return password
 
@@ -82,14 +87,23 @@ def publish_tfa_pw(block_address,tfa_label, encrypt_t_pw):
 
 def encrypt_secret_message(secret_message, password):
     # used to encrypt the secret message on the block chain
-    os.system(f"cipher=$(echo {secret_message} | openssl enc -aes-256-cbc -pass pass:{password} | xxd -p -c 99999)")
-    cipher = os.environ.get('cipher')
+    os.system(f"CIPHER=$(echo {secret_message} | openssl enc -aes-256-cbc -pass pass:{password} | xxd -p -c 99999)")
+    cipher = os.environb.get('CIPHER')
     return cipher 
 
 def encrypt_login_pw(password):
     # need to be able pass this to another function
-    os.system(f'ENCRYPT_L_PW=$(echo {password} | openssl rsautl -encrypt -inkey /tmp/l_pubkey.pem -pubin | xxd -p -c 9999)')
-    encrypt_l_pw = os.environ.get('ENCRYPT_L_PW')
+    # os.environ['ENCRYPT_L_PW'] = f"echo {password} | openssl rsautl -encrypt -inkey /tmp/l_pubkey.pem -pubin | xxd -p -c 9999"
+    
+    echo = subprocess.Popen(f'echo {password}', stdout=subprocess.PIPE)
+    ssl = subprocess.Popen(["openssl", "rsautl", "-encrypt", "-inkey", "/tmp/l_pubkey.pem", "-pubin"],stdin=echo.stdout, stdout=subprocess.PIPE)
+    hexer = subprocess.Popen(["xxd", "-p", "-c", "9999"],stdin=ssl.stdout, stdout=subprocess.PIPE)
+
+
+    encrypt_l_pw = subprocess.run('$ENCRYPT_L_PW', shell=True, stdout=subprocess.PIPE)
+    encrypt_l_pw = encrypt_l_pw.stdout
+    # os.system(f'ENCRYPT_L_PW=$(echo {password} | openssl rsautl -encrypt -inkey /tmp/l_pubkey.pem -pubin | xxd -p -c 9999)')
+    # encrypt_l_pw = os.environb.get('ENCRYPT_L_PW')
     print('login_pw created')
     return encrypt_l_pw
 
