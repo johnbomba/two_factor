@@ -4,7 +4,6 @@ import os
 import sys
 import subprocess
 
-import binascii
 from flask import Flask
 
 app = Flask(__name__)
@@ -74,17 +73,20 @@ def secret_message():
     return secret_msg
 
 def publish_secret_message(block_address, cipher):
+    cipher = cipher.decode('utf-8')
     # publish the secret message
     os.system(f"multichain-cli 2fact publishfrom {block_address} items '' {cipher}" )
     print('message published')
 
 
 def publish_login_pw(block_address, login_label, encrypt_l_pw):
+    encrypt_l_pw = encrypt_l_pw.decode('utf-8')
     # publish the encrypted login pw 
     os.system(f"multichain-cli 2fact publishfrom {block_address} access {login_label} {encrypt_l_pw}")
     print('login published')
 
 def publish_tfa_pw(block_address,tfa_label, encrypt_t_pw):
+    encrypt_t_pw = encrypt_t_pw.decode('utf-8')
     # publish the encrypted tfa pw
     os.system(f"multichain-cli 2fact publishfrom {block_address} access {tfa_label} {encrypt_t_pw}")
     print('t published')
@@ -94,9 +96,11 @@ def encrypt_secret_message(secret_message, password):
     # used to encrypt the secret message on the block chain
     openssl_echo = f'echo {secret_message}'
     openssl_echo2 = subprocess.Popen(openssl_echo, shell=True, stdout=subprocess.PIPE)
-    openssl_enc = subprocess.Popen(f"openssl enc -aes-256-cbc -pass pass:{password}", shell=True, stdin=openssl_echo2.stdout, stdout=subprocess.PIPE)
-    
-    cipher = openssl_enc.stdout
+    openssl_enc = subprocess.Popen(f"openssl enc -aes-256-cbc -pass pass:{password} ", shell=True, stdin=openssl_echo2.stdout, stdout=subprocess.PIPE)
+    hex_openssl = subprocess.Popen(f"xxd -p -c 99999", shell=True, stdin=openssl_enc.stdout, stdout=subprocess.PIPE)
+
+    cipher = hex_openssl.stdout
+    print(f'this is the cipher {cipher}')
     cipher = cipher.read()
     print(cipher)
     # os.system(f"CIPHER=$(echo {secret_message} | openssl enc -aes-256-cbc -pass pass:{password} | xxd -p -c 99999)")
@@ -108,10 +112,11 @@ def encrypt_login_pw(password):
 
     openssl_echo = f'echo {password}'
     openssl_echo2 = subprocess.Popen(openssl_echo, shell=True, stdout=subprocess.PIPE)
-    openssl = subprocess.Popen("openssl rsautl -encrypt -inkey /tmp/l_pubkey.pem -pubin -hexdump", shell=True, stdin=openssl_echo2.stdout, stdout=subprocess.PIPE)
+    openssl_enc = subprocess.Popen("openssl rsautl -encrypt -inkey /tmp/l_pubkey.pem -pubin", shell=True, stdin=openssl_echo2.stdout, stdout=subprocess.PIPE)
+    hex_openssl = subprocess.Popen(f"xxd -p -c 9999", shell=True, stdin=openssl_enc.stdout, stdout=subprocess.PIPE)
 
     #encrypt_l_pw = subprocess.Popen(["xxd", "-p", "-c", "9999"],stdin=ssl.stdou$
-    encrypt_l_pw = openssl.stdout
+    encrypt_l_pw = hex_openssl.stdout
     encrypt_l_pw = encrypt_l_pw.read()
 
     print('login_pw created')
@@ -121,12 +126,12 @@ def encrypt_tfa_pw(password):
     # need to be able pass this to another function
     openssl_echo = f'echo {password}'
     openssl_echo2 = subprocess.Popen(openssl_echo, shell=True, stdout=subprocess.PIPE)
-    openssl = subprocess.Popen("openssl rsautl -encrypt -inkey /tmp/t_pubkey.pem -pubin -hexdump", shell=True, stdin=openssl_echo2.stdout, stdout=subprocess.PIPE)
+    openssl_enc = subprocess.Popen("openssl rsautl -encrypt -inkey /tmp/t_pubkey.pem -pubin", shell=True, stdin=openssl_echo2.stdout, stdout=subprocess.PIPE)
+    hex_openssl = subprocess.Popen(f"xxd -p -c 9999", shell=True, stdin=openssl_enc.stdout, stdout=subprocess.PIPE)
 
     #encrypt_t_pw = subprocess.Popen(["xxd", "-p", "-c", "9999"],stdin=ssl.stdou$
-    encrypt_t_pw = openssl.stdout
+    encrypt_t_pw = hex_openssl.stdout
     encrypt_t_pw = encrypt_t_pw.read()
-    encrypt_t_pw = binascii.hexlify(encrypt_t_pw)
 
     print('tfa_pw created')
     return encrypt_t_pw
