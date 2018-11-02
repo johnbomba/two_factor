@@ -38,9 +38,10 @@ def new_key_to_block():
     # encrypt the secret block key with the login and tfa public keys
     encrypt_l_pw = encrypt_login_pw(password)
     encrypt_t_pw = encrypt_tfa_pw(password)
+    encrypt_secret_msg = encrypt_secret_message(secret_msg, password)
 
     # thess are the publish functions for the secret key , login , and tfa 
-    publish_secret_message(block_address, secret_msg)
+    publish_secret_message(block_address, encrypt_secret_msg)
     publish_login_pw(block_address, login_label, encrypt_l_pw)
     publish_tfa_pw(block_address, tfa_label, encrypt_t_pw)
     
@@ -91,9 +92,16 @@ def publish_tfa_pw(block_address,tfa_label, encrypt_t_pw):
 # TODO rewrite this tomorrow needs subvproccess
 def encrypt_secret_message(secret_message, password):
     # used to encrypt the secret message on the block chain
-    os.system(f"CIPHER=$(echo {secret_message} | openssl enc -aes-256-cbc -pass pass:{password} | xxd -p -c 99999)")
-    cipher = os.environb.get('CIPHER')
-
+    openssl_echo = f'echo {secret_message}'
+    openssl_echo2 = subprocess.Popen(openssl_echo, shell=True, stdout=subprocess.PIPE)
+    openssl_enc = subprocess.Popen(f"openssl enc -aes-256-cbc -pass pass:{password}", shell=True, stdin=openssl_echo2.stdout, stdout=subprocess.PIPE)
+    
+    cipher = openssl_enc.stdout
+    cipher = cipher.read()
+    print(cipher)
+    # os.system(f"CIPHER=$(echo {secret_message} | openssl enc -aes-256-cbc -pass pass:{password} | xxd -p -c 99999)")
+    # cipher = os.environb.get('CIPHER')
+    print(f'this is the cipher {cipher}')
     return cipher 
 
 def encrypt_login_pw(password):
@@ -118,6 +126,7 @@ def encrypt_tfa_pw(password):
     #encrypt_t_pw = subprocess.Popen(["xxd", "-p", "-c", "9999"],stdin=ssl.stdou$
     encrypt_t_pw = openssl.stdout
     encrypt_t_pw = encrypt_t_pw.read()
+    encrypt_t_pw = binascii.hexlify(encrypt_t_pw)
 
     print('tfa_pw created')
     return encrypt_t_pw
