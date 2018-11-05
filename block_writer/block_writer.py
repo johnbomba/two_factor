@@ -15,7 +15,7 @@ def new_key_to_block():
     tfa_address = '1Sr8mr4pXhcdPTDZhu74iyFAchM3Tt52ZZU5jE'
     login_address = '1FmqcFmFxQPbNJuKYvMSu61mWGV1iVtiTqxfUM'
 
-        # transaction id's for the login and 2fa public keys in the pubkeys stream 
+    # transaction id's for the login and 2fa public keys in the pubkeys stream 
     login_tx_id = 'c8935925db039376fb3778f5a97c14df493c2323f3486e86d02e8336e62af5da'
     tfa_tx_id = '8edb17e166c4ff26402f62dddb9282714de42de603827c2fece48898d2062d96'
 
@@ -115,7 +115,6 @@ def encrypt_login_pw(password):
     openssl_enc = subprocess.Popen("openssl rsautl -encrypt -inkey /tmp/l_pubkey.pem -pubin", shell=True, stdin=openssl_echo2.stdout, stdout=subprocess.PIPE)
     hex_openssl = subprocess.Popen(f"xxd -p -c 9999", shell=True, stdin=openssl_enc.stdout, stdout=subprocess.PIPE)
 
-    #encrypt_l_pw = subprocess.Popen(["xxd", "-p", "-c", "9999"],stdin=ssl.stdou$
     encrypt_l_pw = hex_openssl.stdout
     encrypt_l_pw = encrypt_l_pw.read()
 
