@@ -21,6 +21,7 @@ def display_key():
 
 def retrieve_password(access_tx_id):
     # pull down secret key from blockchain
+
     # build the system command
     password_build = f'multichain-cli 2fact gettxdataout {access_tx_id} 0'
     password_pipe = subprocess.Popen(password_build, shell=True, stdout=subprocess.PIPE)
@@ -33,6 +34,7 @@ def retrieve_password(access_tx_id):
 def decrypt_password(access_tx_id, tfa_address):
     # decrypt the password
     password = retrieve_password(access_tx_id)
+
     # build the system command including unix pipes 
     encrypted_pw = f'echo {password}'
     encrypted_pw_pipe = subprocess.Popen(encrypted_pw, shell=True, stdout=subprocess.PIPE)
@@ -40,6 +42,7 @@ def decrypt_password(access_tx_id, tfa_address):
     encrypted_pw_ssl = subprocess.Popen(f'openssl rsautl -decrypt inkey ~/.multichain/2fact/stream-privkeys/{tfa_address}.pem', shell=True, stdin=encrypted_pw_hex.stdout, stdout=subprocess.PIPE)
     decrypted_pw = encrypted_pw_ssl.stdout
     decrypted_pw = decrypted_pw.read()
+
     return decrypted_pw
 
 def retrieve_secret_msg(items_tx_id):
@@ -71,9 +74,6 @@ def gen_login_code():
 
     # calls the decrypt key function returns bytes
     decrypted_key = decrypt_secret_msg(items_tx_id, access_tx_id, tfa_address)
-
-    # encode the key that was pulled from the block chain to bytes
-    # byte_key = str.encode(decrypted_key)
 
     # get the current system time
     raw_time = time.time()

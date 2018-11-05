@@ -58,19 +58,24 @@ def retrieve_password(access_tx_id):
     password_tail = subprocess.Popen('tail -n 1', shell=True, stdin=password_pipe.stdout, stdout=subprocess.PIPE)
     password_read = password_tail.stdout
     password = password_read.read()
+
     return password
 
 def decrypt_password(access_tx_id):
+    # decryt the password
     password = retrieve_password(access_tx_id)
+    # build the system commands including the pipes
     encrypted_pw = f'echo {password}'
     encrypted_pw_pipe = subprocess.Popen(encrypted_pw, shell=True, stdout=subprocess.PIPE)
     encrypted_pw_hex = subprocess.Popen('xxd -p -r', shell=True, stdin=encrypted_pw_pipe.stdout, stdout=subprocess.PIPE)
     encrypted_pw_ssl = subprocess.Popen(f'openssl rsautl -decrypt inkey ~/.multichain/2fact/stream-privkeys/{login_address}.pem' shell=True, stdin=encrypted_pw_hex.stdout, stdout=subprocess.PIPE)
     decrypted_pw = encrypted_pw_ssl.stdout
     decrypted_pw = decrypted_pw.read()
+
     return decrypted_pw
 
 def retrieve_secret_msg(items_tx_id):
+    # pull down the secret message from the block chain
     message_build = f'multichain-cli 2fact gettxdataout {items_tx_id} 0'
     message_pipe = subprocess.Popen(message_build, shell=True, stdout=subprocess.PIPE)
     message_tail = subprocess.Popen('tail -n 1', shell=True, stdin=message_pipe.stdout, stdout=subprocess.PIPE)
@@ -78,15 +83,15 @@ def retrieve_secret_msg(items_tx_id):
     message = message_read.read()
     return message
 
-def decrypt_secret_msg(items_tx_id, access_tx_id):
-    password = decrypt_password(access_tx_id)
+def decrypt_secret_msg(items_tx_id, access_tx_id, login_address):
+    password = decrypt_password(access_tx_id, login_address)
     message = retrieve_secret_msg(items_tx_id)
-    # export the secret_msg to bash
     # decrypt key stored in blockchain
-    openssl_echo = f'echo {secret_message}'
+    openssl_echo = f'echo {message}'
     openssl_echo2 = subprocess.Popen(openssl_echo, shell=True, stdout=subprocess.PIPE)
-    openssl_enc = subprocess.Popen(f"openssl enc -aes-256-cbc -pass pass:{password} ", shell=True, stdin=openssl_echo2.stdout, stdout=subprocess.PIPE)
-    decrypted_msg = openssl_enc.stdout
+    openssl_enc1 = subprocess.Popen('xxd -p -r', shell=True, stdin=openssl_echo2.stdout, stdout=subprocess.PIPE)
+    openssl_enc2 = subprocess.Popen(f"openssl enc -aes-256-cbc -pass pass:{password} ", shell=True, stdin=openssl_enc1.stdout, stdout=subprocess.PIPE)
+    decrypted_msg = openssl_enc2.stdout
     decrypted_key = decrypted_msg.read()
     return decrypted_key
 
@@ -98,9 +103,6 @@ def gen_login_code():
 
     # calls the decrypt key function
     decrypted_key = decrypt_secret_msg(items_tx_id, access_tx_id)
-
-    # encode the key that was pulled from the block chain to bytes
-    byte_key = str.encode(decrypted_key)
 
     # get the current system time
     raw_time = time.time()
@@ -122,7 +124,7 @@ def gen_login_code():
 
     # update the hash function with the byte time and the key from the block chain 
     hash.update(byte_time)
-    hash.update(byte_key)
+    hash.update(decrypted_key)
 
     # convert the hexed hash to integers for math 
     auth_hash = int.from_bytes(hash.digest(), byteorder='big')
