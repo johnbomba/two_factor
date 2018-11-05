@@ -11,13 +11,13 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def new_key_to_block():
     # addresses that are used to build labels
-    block_address = '1TuA5SDysRHGPgzvqVXgN9kDT88SFa51ZRPcMN'
-    tfa_address = '1Sr8mr4pXhcdPTDZhu74iyFAchM3Tt52ZZU5jE'
-    login_address = '1FmqcFmFxQPbNJuKYvMSu61mWGV1iVtiTqxfUM'
+    block_address = '1S6cYiXFqdDU11VXy4Psr7N8RADWSW5sQ6SP6f'
+    tfa_address = '1GN9k6QfkNoHJjzDbaaBJgPJubRUH65jEconhg'
+    login_address = '1BMutC7eV1LBh1a1X3edQFe27C5t6kyNppbGtL'
 
     # transaction id's for the login and 2fa public keys in the pubkeys stream 
-    login_tx_id = 'c8935925db039376fb3778f5a97c14df493c2323f3486e86d02e8336e62af5da'
-    tfa_tx_id = '8edb17e166c4ff26402f62dddb9282714de42de603827c2fece48898d2062d96'
+    login_tx_id = '97664fc44a73ee92977143a021b2a293272faf5e50ec2abb82ce0c1e5a252a7b'
+    tfa_tx_id = 'f5339ed9948d43e09acd7da6212971f21f9e91b9442310e79c8d64541e14dee2'
 
     # generate password 
     password = generate_password()

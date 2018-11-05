@@ -1,8 +1,12 @@
 #! /usr/bin/env python3
 ## this goes on the login server
 
+import os
+import subprocess
+import hashlib
+
 import sqlite3
-import mcrpc
+
 
 def validate_credentials(username, password):
     # connect to the credentails DB
@@ -46,27 +50,18 @@ def validate_credentials(username, password):
     username = username
     return None
 
-def retrieve_password():
+def retrieve_password(access_tx_id):
     # pull down secret key from blockchain
-    tx_id = '13918ddbdb573dbcc8b9730f89ac76c6da07209fc2bcef7f07a4cfbc9f33f2d2'
-    login_address = '1FmqcFmFxQPbNJuKYvMSu61mWGV1iVtiTqxfUM'
-    login_lable = f'{tx_id}-{login_address}'
 
-    # pull down secret msg from blockchain 
-    # TODO change port #
-    # client = c = mcrpc.RpcClient(f'127.0.0.1', 6270, 'multichainrpc', {tx_id})
-    # secret_msg = client.liststreamkeyitems('items', login_lable, count=True, start=1)
-    # secret_msg = secret_msg[0]['data']
-
-    password_build = f'multichain-cli 2fact gettxdataout {tx_id} 0'
+    password_build = f'multichain-cli 2fact gettxdataout {access_tx_id} 0'
     password_pipe = subprocess.Popen(password_build, shell=True, stdout=subprocess.PIPE)
     password_tail = subprocess.Popen('tail -n 1', shell=True, stdin=password_pipe.stdout, stdout=subprocess.PIPE)
     password_read = password_tail.stdout
     password = password_read.read()
     return password
 
-def decrypt_password():
-    password = retrieve_password()
+def decrypt_password(access_tx_id):
+    password = retrieve_password(access_tx_id)
     encrypted_pw = f'echo {password}'
     encrypted_pw_pipe = subprocess.Popen(encrypted_pw, shell=True, stdout=subprocess.PIPE)
     encrypted_pw_hex = subprocess.Popen('xxd -p -r', shell=True, stdin=encrypted_pw_pipe.stdout, stdout=subprocess.PIPE)
@@ -75,17 +70,17 @@ def decrypt_password():
     decrypted_pw = decrypted_pw.read()
     return decrypted_pw
 
-def retrieve_secret_msg():
-    message_build = f'multichain-cli 2fact gettxdataout {tx_id} 0'
+def retrieve_secret_msg(items_tx_id):
+    message_build = f'multichain-cli 2fact gettxdataout {items_tx_id} 0'
     message_pipe = subprocess.Popen(message_build, shell=True, stdout=subprocess.PIPE)
     message_tail = subprocess.Popen('tail -n 1', shell=True, stdin=message_pipe.stdout, stdout=subprocess.PIPE)
     message_read = message_tail.stdout
     message = message_read.read()
     return message
 
-def decrypt_secret_msg():
-    password = decrypt_password()
-    message = retrieve_secret_msg()
+def decrypt_secret_msg(items_tx_id, access_tx_id):
+    password = decrypt_password(access_tx_id)
+    message = retrieve_secret_msg(items_tx_id)
     # export the secret_msg to bash
     # decrypt key stored in blockchain
     openssl_echo = f'echo {secret_message}'
@@ -96,8 +91,13 @@ def decrypt_secret_msg():
     return decrypted_key
 
 def gen_login_code():
+    items_tx_id = '44becbc521c2ecba19a69cb7f38a1b1fa168b1a7e434154879e6830cf14dc1a8'
+    access_tx_id = '70b9c926c12285c2be6a03275edfc951d16c09b96caf9f7274118c4ae3f021ea'
+    login_address = '1BMutC7eV1LBh1a1X3edQFe27C5t6kyNppbGtL'
+    login_lable = f'{access_tx_id}-{login_address}'
+
     # calls the decrypt key function
-    decrypted_key = decrypt_secret_msg()
+    decrypted_key = decrypt_secret_msg(items_tx_id, access_tx_id)
 
     # encode the key that was pulled from the block chain to bytes
     byte_key = str.encode(decrypted_key)
@@ -131,6 +131,13 @@ def gen_login_code():
     auth_code = auth_hash % 10 ** 8
     return auth_code
 
+def check_two_factor(submitted_key):
+    # if the authentication code is equal to the input code return true
+    if submitted_key == gen_login_code():
+        return True
+    else:
+        return False
+
 def create_acount(new_username, new_password):
     # username and password inputs
     username = new_username
@@ -161,15 +168,6 @@ def create_acount(new_username, new_password):
 
 def gen_two_factor():
     pass
-
-def check_two_factor(submitted_key):
-    # if the authentication code is equal to the input code return true
-    if submitted_key == gen_login_code():
-        return True
-    else:
-        return False
-
-
 
 if __name__ == '__main__':
     create_acount('carter', 'cart')
