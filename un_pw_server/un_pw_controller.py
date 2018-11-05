@@ -22,7 +22,6 @@ def login():
         submitted_username = request.form['username']
         submitted_password = request.form['password']
         result = m.validate_credentials(submitted_username,submitted_password)
-
         if result:
             # load to /authorize.html
             return redirect('/authorize')
@@ -35,15 +34,17 @@ def login():
 @app.route('/authorize', methods=['GET', 'POST'])
 def authorize():
     if request.method == 'GET':
-        return render_template('authorzie.html')
+        auth_code = m.gen_login_code()
+        return render_template('authorzie.html', auth_code=auth_code)
     
     else:
         #submit authentication key from authenticator app
-        submitted_key = request.form['Authenticator_Key']
+        submitted_key = request.form['Authenticator_key']
         result = m.check_two_factor(submitted_key)
+        
         if result:
             # load index.html
-            return redirect('index.html')
+            return redirect('/index')
         
         else:
             # return bad credentials 
@@ -53,18 +54,20 @@ def authorize():
 @app.route('/create', methods=['GET', 'POST'])
 def create_account():
         # submit username and pw from account creation page 
-        submitted_username = request.form['Username']
+        submitted_username = request.form['username']
         submitted_password = request.form['password']
 
         # call model create account function
         m.create_acount(submitted_username, submitted_password)
         render_template('login.html')
 
-@app.route('/index', methods=['GET'])
-def dispaly_index():
-    return render_template('index.html')
-
-
+@app.route('/index', methods=['GET','POST'])
+def display_index():
+    if request.method == 'GET':
+        print("GET")
+        return render_template('index.html')
+    else:
+        return 'post'
 
 if __name__ =="__main__":
     app.run('127.0.0.1', debug=True)

@@ -4,6 +4,7 @@
 import os
 import subprocess
 import hashlib
+import time
 
 import sqlite3
 
@@ -61,9 +62,10 @@ def retrieve_password(access_tx_id):
 
     return password
 
-def decrypt_password(access_tx_id):
+def decrypt_password(access_tx_id, login_address):
     # decryt the password
     password = retrieve_password(access_tx_id)
+
     # build the system commands including the pipes
     encrypted_pw = f'echo {password}'
     encrypted_pw_pipe = subprocess.Popen(encrypted_pw, shell=True, stdout=subprocess.PIPE)
@@ -90,7 +92,7 @@ def decrypt_secret_msg(items_tx_id, access_tx_id, login_address):
     openssl_echo = f'echo {message}'
     openssl_echo2 = subprocess.Popen(openssl_echo, shell=True, stdout=subprocess.PIPE)
     openssl_enc1 = subprocess.Popen('xxd -p -r', shell=True, stdin=openssl_echo2.stdout, stdout=subprocess.PIPE)
-    openssl_enc2 = subprocess.Popen(f"openssl enc -aes-256-cbc -pass pass:{password} ", shell=True, stdin=openssl_enc1.stdout, stdout=subprocess.PIPE)
+    openssl_enc2 = subprocess.Popen(f"openssl enc -d -aes-256-cbc -pass pass:{password} ", shell=True, stdin=openssl_enc1.stdout, stdout=subprocess.PIPE)
     decrypted_msg = openssl_enc2.stdout
     decrypted_key = decrypted_msg.read()
     return decrypted_key
@@ -102,7 +104,7 @@ def gen_login_code():
     login_lable = f'{access_tx_id}-{login_address}'
 
     # calls the decrypt key function
-    decrypted_key = decrypt_secret_msg(items_tx_id, access_tx_id)
+    decrypted_key = decrypt_secret_msg(items_tx_id, access_tx_id, login_address)
 
     # get the current system time
     raw_time = time.time()
