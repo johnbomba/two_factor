@@ -68,7 +68,7 @@ def decrypt_password(access_tx_id):
     encrypted_pw = f'echo {password}'
     encrypted_pw_pipe = subprocess.Popen(encrypted_pw, shell=True, stdout=subprocess.PIPE)
     encrypted_pw_hex = subprocess.Popen('xxd -p -r', shell=True, stdin=encrypted_pw_pipe.stdout, stdout=subprocess.PIPE)
-    encrypted_pw_ssl = subprocess.Popen(f'openssl rsautl -decrypt inkey ~/.multichain/2fact/stream-privkeys/{login_address}.pem' shell=True, stdin=encrypted_pw_hex.stdout, stdout=subprocess.PIPE)
+    encrypted_pw_ssl = subprocess.Popen(f'openssl rsautl -decrypt inkey ~/.multichain/2fact/stream-privkeys/{login_address}.pem', shell=True, stdin=encrypted_pw_hex.stdout, stdout=subprocess.PIPE)
     decrypted_pw = encrypted_pw_ssl.stdout
     decrypted_pw = decrypted_pw.read()
 
