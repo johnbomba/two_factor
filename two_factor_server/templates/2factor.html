@@ -1,5 +1,48 @@
 <!DOCTYPE html>
+<div class="row">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible col-sm-12 col-md-12" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <!-- <strong>Title</strong> --> {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </div>
+<html lang="en">
+  <head>
+    <meta http-equiv="refresh" content="30">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content=""> 
 
-<div>
-    <h1>{{result}}</h1
-></div>
+    <title>Welcome</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="https://getbootstrap.com/docs/4.1/examples/floating-labels/floating-labels.css" rel="stylesheet">
+  </head>
+  <style>  
+        body{
+            color: #fffefe;
+            background-color: #000000;
+        }
+        .text-center{
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+            border: 3px solid #C0C0C0;
+        }
+</style>
+    <body class='text-center'>
+        <div>
+            <h1>{{result}}</h1>
+        </div>
+    </body>
+</html>
+
