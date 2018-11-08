@@ -1,18 +1,5 @@
 <!DOCTYPE html>
-<div class="row">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible col-sm-12 col-md-12" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <!-- <strong>Title</strong> --> {{ message }}
-                </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        </div>
-<html lang="en">
-  <head>
+<head>
     <meta http-equiv="refresh" content="30">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,26 +9,86 @@
     <title>Welcome</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://getbootstrap.com/docs/4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="https://getbootstrap.com/docs/4.1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     
     <!-- Custom styles for this template -->
-    <link href="https://getbootstrap.com/docs/4.1/examples/floating-labels/floating-labels.css" rel="stylesheet">
-  </head>
-  <style>  
+    <!-- <link href="https://getbootstrap.com/docs/4.1/examples/floating-labels/floating-labels.css" rel="stylesheet"> -->
+</head>
+<style>  
+
+        /* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
         body{
-            color: #fffefe;
+            color: #C0C0C0;
             background-color: #000000;
         }
-        .text-center{
+
+        .wrapper {
             display: table-cell;
-            text-align: center;
             vertical-align: middle;
-            border: 3px solid #C0C0C0;
         }
+
+        h1 {
+            font-family: sans-serif;
+            font-size: 4em;
+            display: inline-block;
+            margin: 300px 0px 0px 60px;
+        }
+
 </style>
-    <body class='text-center'>
-        <div>
-            <h1>{{result}}</h1>
+    <body>
+        <div class="wrapper">
+                <h1 style="text-align: center">
+                    {{ result }}
+                </h1>
         </div>
     </body>
 </html>

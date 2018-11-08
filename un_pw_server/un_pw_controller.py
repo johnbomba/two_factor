@@ -39,7 +39,7 @@ def authorize():
     
     else:
         #submit authentication key from authenticator app
-        submitted_key = request.form['Authenticator_key']
+        submitted_key = request.form['Authenticator_Key']
         result = m.check_two_factor(submitted_key)
         
         if result:
@@ -65,9 +65,9 @@ def create_account():
 def display_index():
     if request.method == 'GET':
         print("GET")
-        return render_template('index.html')
+        return render_template('/index')
     else:
         return 'post'
 
 if __name__ =="__main__":
-    app.run('127.0.0.1', debug=True)
+    app.run('127.0.0.1', port=5001, debug=True)

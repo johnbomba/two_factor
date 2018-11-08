@@ -174,5 +174,5 @@ def gen_two_factor():
     pass
 
 if __name__ == '__main__':
-    create_acount('carter', 'cart')
+    create_acount('john', 'john')
     # validate_credentials('greg','Gu&essThi@sMo%fo')
