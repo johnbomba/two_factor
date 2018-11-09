@@ -34,17 +34,16 @@ def login():
 @app.route('/authorize', methods=['GET', 'POST'])
 def authorize():
     if request.method == 'GET':
-        auth_code = m.gen_login_code()
-        return render_template('authorzie.html', auth_code=auth_code)
+        return render_template('authorzie.html')
     
     else:
         #submit authentication key from authenticator app
-        submitted_key = request.form['Authenticator_Key']
+        submitted_key = request.form['Authenticator_key']
         result = m.check_two_factor(submitted_key)
-        
+
         if result:
             # load index.html
-            session['authenticated' == True]
+            session['authenticated'] = True
             return redirect('/index')
         
         else:
@@ -65,7 +64,7 @@ def create_account():
 @app.route('/index', methods=['GET','POST'])
 def display_index():
     if request.method == 'GET':
-        if False: # not session.get('authenticated'):
+        if not session.get('authenticated'):
             return redirect('/login')
         print("GET")
         return render_template('dashboard.html')
@@ -74,3 +73,4 @@ def display_index():
 
 if __name__ =="__main__":
     app.run('127.0.0.1', port=5001, debug=True)
+    app.run('0.0.0.0', debug=True)
