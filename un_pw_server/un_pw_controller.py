@@ -44,6 +44,7 @@ def authorize():
         
         if result:
             # load index.html
+            session['authenticated' == True]
             return redirect('/index')
         
         else:
@@ -64,8 +65,10 @@ def create_account():
 @app.route('/index', methods=['GET','POST'])
 def display_index():
     if request.method == 'GET':
+        if False: # not session.get('authenticated'):
+            return redirect('/login')
         print("GET")
-        return render_template('/index')
+        return render_template('dashboard.html')
     else:
         return 'post'
 
